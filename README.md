@@ -2,14 +2,13 @@
 
 A comprehensive, full-stack financial dashboard designed to track income, expenses, and visualize spending habits. Built with **Vanilla JavaScript**, **Tailwind CSS**, and **Firebase** for real-time data persistence and authentication.
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live%20View-brightgreen)]([https://dewan-eng.github.io/Expense-Tracker/])
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 📸 Screenshots
 
 <img width="1919" height="928" alt="Screenshot 2026-01-21 193223" src="https://github.com/user-attachments/assets/12b9ed65-f208-4437-b090-02eb85547723" />
 
-
+### 🚀 Live Link: [Expense-Tracker](https://dewan-eng.github.io/Expense-Tracker/)
 
 ## ✨ Key Features
 
