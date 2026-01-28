@@ -6,7 +6,7 @@ A comprehensive, full-stack financial dashboard designed to track income, expens
 
 ## 📸 Screenshots
 
-<img width="1919" height="928" alt="Screenshot 2026-01-21 193223" src="https://github.com/user-attachments/assets/12b9ed65-f208-4437-b090-02eb85547723" />
+<img width="1919" height="928" alt="Screenshot 2026-01-21 193223" src="https://github.com/user-attachments/assets/cd46a051-0200-49da-bf12-3be88e38748b" />
 
 ### 🚀 Live Link: [Expense-Tracker](https://dewan-eng.github.io/Expense-Tracker/)
 
