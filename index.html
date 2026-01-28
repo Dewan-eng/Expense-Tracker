@@ -3,86 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker - Secure</title>
+    <title>Expense Tracker - Modern</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Overlapping Background Text Effect */
+        .bg-text-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bg-text {
+            position: absolute;
+            font-size: 15vw;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            white-space: nowrap;
+            user-select: none;
+        }
+        
+        .bg-text:nth-child(1) {
+            top: 5%;
+            left: -10%;
+            transform: rotate(-10deg);
+            animation: floatText1 20s ease-in-out infinite;
+        }
+        
+        .bg-text:nth-child(2) {
+            top: 30%;
+            right: -10%;
+            transform: rotate(8deg);
+            animation: floatText2 25s ease-in-out infinite;
+        }
+        
+        .bg-text:nth-child(3) {
+            bottom: 10%;
+            left: 5%;
+            transform: rotate(-5deg);
+            animation: floatText3 22s ease-in-out infinite;
+        }
+        
+        @keyframes floatText1 {
+            0%, 100% { transform: rotate(-10deg) translateY(0); }
+            50% { transform: rotate(-10deg) translateY(-30px); }
+        }
+        
+        @keyframes floatText2 {
+            0%, 100% { transform: rotate(8deg) translateY(0); }
+            50% { transform: rotate(8deg) translateY(40px); }
+        }
+        
+        @keyframes floatText3 {
+            0%, 100% { transform: rotate(-5deg) translateX(0); }
+            50% { transform: rotate(-5deg) translateX(50px); }
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Modern gradient buttons */
+        .btn-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-gradient-success {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(240, 147, 251, 0.4);
+        }
+        
+        .btn-gradient-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+        
+        /* Colorful stat cards */
+        .stat-card-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .stat-card-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .stat-card-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        /* Animated underline */
+        .animated-underline {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .animated-underline::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            bottom: -8px;
+            left: 0;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 2px;
+        }
+        
+        /* Input focus effects */
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+        }
+        
+        /* Table hover effects */
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        tbody tr:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05));
+            transform: scale(1.01);
+        }
+        
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Category badge colors */
+        .badge-salary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .badge-food { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .badge-rent { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+        .badge-entertainment { background: linear-gradient(135deg, #fa709a, #fee140); color: white; }
+        .badge-utilities { background: linear-gradient(135deg, #30cfd0, #330867); color: white; }
+        .badge-other { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
-    <div id="auth-container" class="flex-grow flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-            <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-indigo-600">Login</h2>
+    <!-- Background Text Overlay -->
+    <div class="bg-text-overlay">
+        <div class="bg-text">FINANCE</div>
+        <div class="bg-text">TRACKER</div>
+        <div class="bg-text">MONEY</div>
+    </div>
+
+    <!-- Auth Container -->
+    <div id="auth-container" class="flex-grow flex items-center justify-center content-wrapper p-6">
+        <div class="glass-strong p-10 rounded-3xl max-w-md w-full transform hover:scale-105 transition-all duration-300">
+            <div class="text-center mb-8">
+                <h2 id="auth-title" class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    Login
+                </h2>
+                <p class="text-gray-600">Welcome back to your financial hub</p>
+            </div>
             
-            <form id="auth-form">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                    <input type="email" id="auth-email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <form id="auth-form" class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                    <input type="email" id="auth-email" 
+                           class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                           placeholder="you@example.com" required>
                 </div>
-                <div class="mb-6">
+                <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                    <input type="password" id="auth-password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="password" id="auth-password" 
+                           class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                           placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded w-full transition duration-300">
-                    Submit
+                <button type="submit" class="btn-gradient-primary text-white font-bold py-3 px-6 rounded-xl w-full shadow-lg">
+                    Get Started
                 </button>
             </form>
 
-            <p class="mt-4 text-center text-sm text-gray-600">
+            <p class="mt-6 text-center text-sm text-gray-600">
                 <span id="auth-toggle-text">Don't have an account?</span>
-                <button id="auth-toggle-btn" class="text-indigo-600 font-bold hover:underline">Sign Up</button>
+                <button id="auth-toggle-btn" class="text-purple-600 font-bold hover:underline ml-1">Sign Up</button>
             </p>
-            <p id="auth-error" class="text-red-500 text-center text-sm mt-2 hidden"></p>
+            <p id="auth-error" class="text-red-500 text-center text-sm mt-3 hidden font-semibold"></p>
         </div>
     </div>
 
-    <div id="app-container" class="hidden container mx-auto p-6">
+    <!-- App Container -->
+    <div id="app-container" class="hidden container mx-auto p-6 content-wrapper">
         
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">Financial Dashboard</h1>
-            <div class="flex gap-2 mt-4 md:mt-0">
-                <button onclick="downloadPDF()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow flex items-center text-sm">
+        <!-- Header -->
+        <div class="glass-strong p-6 rounded-3xl mb-8 flex flex-col md:flex-row justify-between items-center shadow-xl">
+            <div>
+                <h1 class="text-4xl font-bold mb-2">
+                    <span class="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent animated-underline">
+                        Financial Dashboard
+                    </span>
+                </h1>
+                <p class="text-gray-600">Track your expenses with style</p>
+            </div>
+            <div class="flex gap-3 mt-4 md:mt-0">
+                <button onclick="downloadPDF()" class="btn-gradient-info text-white font-bold py-3 px-6 rounded-xl shadow-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
                     Download PDF
                 </button>
-                <button id="logout-btn" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow text-sm">
+                <button id="logout-btn" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-3 px-6 rounded-xl shadow-lg border-2 border-gray-200 transition-all">
                     Logout
                 </button>
             </div>
         </div>
 
+        <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
-                <h3 class="text-gray-500 text-sm uppercase">Total Balance</h3>
-                <p id="balance" class="text-2xl font-bold text-gray-800">₹0.00</p>
+            <div class="stat-card-1 p-8 rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-white text-sm uppercase font-semibold opacity-90 mb-2">Total Balance</h3>
+                        <p id="balance" class="text-4xl font-bold text-white">₹0.00</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded-2xl">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
-                <h3 class="text-gray-500 text-sm uppercase">Income</h3>
-                <p id="money-plus" class="text-2xl font-bold text-green-500">+₹0.00</p>
+            <div class="stat-card-2 p-8 rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-white text-sm uppercase font-semibold opacity-90 mb-2">Income</h3>
+                        <p id="money-plus" class="text-4xl font-bold text-white">+₹0.00</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded-2xl">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-red-500">
-                <h3 class="text-gray-500 text-sm uppercase">Expenses</h3>
-                <p id="money-minus" class="text-2xl font-bold text-red-500">-₹0.00</p>
+            <div class="stat-card-3 p-8 rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-white text-sm uppercase font-semibold opacity-90 mb-2">Expenses</h3>
+                        <p id="money-minus" class="text-4xl font-bold text-white">-₹0.00</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded-2xl">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Form and Chart Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-bold mb-4">Add New Transaction</h3>
-                <form id="form">
-                    <div class="mb-4">
+            <div class="glass-strong p-8 rounded-3xl shadow-xl">
+                <h3 class="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    Add New Transaction
+                </h3>
+                <form id="form" class="space-y-5">
+                    <div>
                         <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                        <input type="text" id="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter text..." required>
+                        <input type="text" id="text" 
+                               class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                               placeholder="e.g., Grocery shopping" required>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Amount <br><span class="text-xs font-normal text-gray-500">(Negative - expense, Positive + income)</span></label>
-                        <input type="number" id="amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter amount..." required>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">
+                            Amount 
+                            <span class="text-xs font-normal text-gray-500 block mt-1">Negative for expense, Positive for income</span>
+                        </label>
+                        <input type="number" id="amount" 
+                               class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                               placeholder="e.g., -500 or +5000" required>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <label class="block text-gray-700 text-sm font-bold mb-2">Category</label>
-                        <select id="category" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <select id="category" class="shadow-lg border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200">
                             <option value="Salary">Salary</option>
                             <option value="Food">Food</option>
                             <option value="Rent">Rent</option>
@@ -91,24 +354,34 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full transition duration-300">Add Transaction</button>
+                    <button class="btn-gradient-success text-white font-bold py-3 px-6 rounded-xl w-full shadow-lg">
+                        Add Transaction
+                    </button>
                 </form>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md flex justify-center items-center relative" style="height: 400px;">
-                <canvas id="expenseChart"></canvas>
+            <div class="glass-strong p-8 rounded-3xl shadow-xl flex flex-col">
+                <h3 class="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                    Expense Breakdown
+                </h3>
+                <div class="flex-grow flex justify-center items-center" style="min-height: 300px;">
+                    <canvas id="expenseChart"></canvas>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-xl font-bold mb-4">Last 10 Transactions</h3>
+        <!-- Transactions Table -->
+        <div class="glass-strong p-8 rounded-3xl shadow-xl">
+            <h3 class="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Recent Transactions
+            </h3>
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto">
-                    <thead class="bg-gray-200">
-                        <tr>
-                            <th class="px-4 py-2 text-left text-gray-600">Description</th>
-                            <th class="px-4 py-2 text-left text-gray-600">Category</th>
-                            <th class="px-4 py-2 text-right text-gray-600">Amount</th>
-                            <th class="px-4 py-2 text-center text-gray-600">Action</th>
+                    <thead>
+                        <tr class="border-b-2 border-gray-200">
+                            <th class="px-6 py-4 text-left text-gray-700 font-bold">Description</th>
+                            <th class="px-6 py-4 text-left text-gray-700 font-bold">Category</th>
+                            <th class="px-6 py-4 text-right text-gray-700 font-bold">Amount</th>
+                            <th class="px-6 py-4 text-center text-gray-700 font-bold">Action</th>
                         </tr>
                     </thead>
                     <tbody id="list" class="text-gray-700"></tbody>
