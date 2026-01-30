@@ -92,6 +92,8 @@ onAuthStateChanged(auth, (user) => {
 // --- APP LOGIC ---
 
 function initApp() {
+    // Note: This query requires a Composite Index in Firestore.
+    // If the console says "The query requires an index", follow the link provided in the console.
     const q = query(
         collection(db, "transactions"), 
         where("uid", "==", currentUser.uid), 
@@ -107,24 +109,44 @@ function initApp() {
     });
 }
 
-async function addTransaction(e) {
-    e.preventDefault();
+// --- FIXED ADD TRANSACTION FUNCTION ---
+// Attached to window to ensure visibility to HTML and event listeners
+window.addTransaction = async function(e) {
+    if(e) e.preventDefault(); // Prevent form reload
+
     const text = document.getElementById('text');
     const amount = document.getElementById('amount');
     const category = document.getElementById('category');
 
-    if (text.value.trim() === '' || amount.value.trim() === '') return;
+    // Basic Validation
+    if (!text || !amount || text.value.trim() === '' || amount.value.trim() === '') {
+        alert('Please add a text and amount');
+        return;
+    }
 
-    const newTransaction = {
-        text: text.value,
-        amount: +amount.value,
-        category: category.value,
-        createdAt: serverTimestamp(),
-        uid: currentUser.uid 
-    };
+    if (!currentUser) {
+        alert('You must be logged in to add transactions');
+        return;
+    }
 
-    await addDoc(collection(db, "transactions"), newTransaction);
-    text.value = ''; amount.value = '';
+    try {
+        const newTransaction = {
+            text: text.value,
+            amount: +amount.value, // Convert string to number
+            category: category ? category.value : 'Other',
+            createdAt: serverTimestamp(),
+            uid: currentUser.uid 
+        };
+
+        await addDoc(collection(db, "transactions"), newTransaction);
+        
+        // Clear inputs on success
+        text.value = ''; 
+        amount.value = '';
+    } catch (error) {
+        console.error("Error adding transaction: ", error);
+        alert("Failed to add transaction. Check console for details.");
+    }
 }
 
 // Attach to window so HTML button can find it
@@ -233,7 +255,10 @@ function addDeleteButtonGlowEffect() {
 }
 
 function updateChart() {
-    const ctx = document.getElementById('expenseChart').getContext('2d');
+    const canvas = document.getElementById('expenseChart');
+    if (!canvas) return; // Prevent crash if canvas missing
+
+    const ctx = canvas.getContext('2d');
     const categories = {};
     transactions.forEach(t => {
         if (t.amount < 0) {
@@ -336,7 +361,12 @@ function updateUI() {
     updateChart();
 }
 
-document.getElementById('form').addEventListener('submit', addTransaction);
+// --- SAFE EVENT LISTENER ATTACHMENT ---
+// Checks if form exists before attaching to prevent errors
+const form = document.getElementById('form');
+if (form) {
+    form.addEventListener('submit', window.addTransaction);
+}
 
 // PDF Export (Attached to Window)
 window.downloadPDF = function() {
