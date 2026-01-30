@@ -92,8 +92,6 @@ onAuthStateChanged(auth, (user) => {
 // --- APP LOGIC ---
 
 function initApp() {
-    // Note: This query requires a Composite Index in Firestore.
-    // If the console says "The query requires an index", follow the link provided in the console.
     const q = query(
         collection(db, "transactions"), 
         where("uid", "==", currentUser.uid), 
@@ -109,44 +107,24 @@ function initApp() {
     });
 }
 
-// --- FIXED ADD TRANSACTION FUNCTION ---
-// Attached to window to ensure visibility to HTML and event listeners
-window.addTransaction = async function(e) {
-    if(e) e.preventDefault(); // Prevent form reload
-
+async function addTransaction(e) {
+    e.preventDefault();
     const text = document.getElementById('text');
     const amount = document.getElementById('amount');
     const category = document.getElementById('category');
 
-    // Basic Validation
-    if (!text || !amount || text.value.trim() === '' || amount.value.trim() === '') {
-        alert('Please add a text and amount');
-        return;
-    }
+    if (text.value.trim() === '' || amount.value.trim() === '') return;
 
-    if (!currentUser) {
-        alert('You must be logged in to add transactions');
-        return;
-    }
+    const newTransaction = {
+        text: text.value,
+        amount: +amount.value,
+        category: category.value,
+        createdAt: serverTimestamp(),
+        uid: currentUser.uid 
+    };
 
-    try {
-        const newTransaction = {
-            text: text.value,
-            amount: +amount.value, // Convert string to number
-            category: category ? category.value : 'Other',
-            createdAt: serverTimestamp(),
-            uid: currentUser.uid 
-        };
-
-        await addDoc(collection(db, "transactions"), newTransaction);
-        
-        // Clear inputs on success
-        text.value = ''; 
-        amount.value = '';
-    } catch (error) {
-        console.error("Error adding transaction: ", error);
-        alert("Failed to add transaction. Check console for details.");
-    }
+    await addDoc(collection(db, "transactions"), newTransaction);
+    text.value = ''; amount.value = '';
 }
 
 // Attach to window so HTML button can find it
@@ -173,7 +151,7 @@ function updateAccount() {
     money_minus.innerText = `-₹${formatMoney(expense)}`;
 }
 
-// Get category badge class (Red & Black Theme)
+// Get category badge class
 function getCategoryBadgeClass(category) {
     const badgeMap = {
         'Salary': 'badge-salary',
@@ -193,13 +171,13 @@ function renderList() {
     if (transactions.length === 0) {
         list.innerHTML = `
             <tr>
-                <td colspan="4" class="px-6 py-8 text-center">
+                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
                     <div class="flex flex-col items-center gap-3">
-                        <svg class="w-16 h-16" style="color: rgba(255, 0, 0, 0.3);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <p class="text-lg font-semibold" style="color: rgba(255, 255, 255, 0.7);">No transactions yet</p>
-                        <p class="text-sm" style="color: rgba(255, 255, 255, 0.5);">Add your first transaction to get started</p>
+                        <p class="text-lg font-semibold">No transactions yet</p>
+                        <p class="text-sm">Add your first transaction to get started</p>
                     </div>
                 </td>
             </tr>
@@ -209,17 +187,17 @@ function renderList() {
     
     transactions.slice(0, 10).forEach(transaction => {
         const sign = transaction.amount < 0 ? '-' : '+';
-        const colorClass = transaction.amount < 0 ? 'text-red-400' : 'text-green-400';
+        const colorClass = transaction.amount < 0 ? 'text-red-500' : 'text-green-500';
         const badgeClass = getCategoryBadgeClass(transaction.category);
         
         const row = document.createElement('tr');
-        row.className = 'transition-all duration-300';
+        row.className = 'border-b border-gray-100';
         row.innerHTML = `
             <td class="px-6 py-4">
-                <span class="font-semibold" style="color: rgba(255, 255, 255, 0.9);">${transaction.text}</span>
+                <span class="font-semibold text-gray-800">${transaction.text}</span>
             </td>
             <td class="px-6 py-4">
-                <span class="${badgeClass} py-2 px-4 rounded-full text-xs font-bold shadow-lg">
+                <span class="${badgeClass} py-2 px-4 rounded-full text-xs font-bold shadow-sm">
                     ${transaction.category}
                 </span>
             </td>
@@ -227,38 +205,17 @@ function renderList() {
                 ${sign}₹${formatMoney(Math.abs(transaction.amount))}
             </td>
             <td class="px-6 py-4 text-center">
-                <button class="delete-btn bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all transform hover:scale-105 hover:shadow-red-500/50" 
-                        onclick="removeTransaction('${transaction.id}')"
-                        style="position: relative; overflow: hidden;">
-                    <span style="position: relative; z-index: 1;">Delete</span>
+                <button class="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all transform hover:scale-105" onclick="removeTransaction('${transaction.id}')">
+                    Delete
                 </button>
             </td>
         `;
         list.appendChild(row);
     });
-    
-    // Add glow effect to delete buttons
-    addDeleteButtonGlowEffect();
-}
-
-// Add glow effect to delete buttons
-function addDeleteButtonGlowEffect() {
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(btn => {
-        btn.addEventListener('mouseenter', function() {
-            this.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.6), 0 0 40px rgba(255, 0, 0, 0.4), 0 0 60px rgba(255, 0, 0, 0.2)';
-        });
-        btn.addEventListener('mouseleave', function() {
-            this.style.boxShadow = '';
-        });
-    });
 }
 
 function updateChart() {
-    const canvas = document.getElementById('expenseChart');
-    if (!canvas) return; // Prevent crash if canvas missing
-
-    const ctx = canvas.getContext('2d');
+    const ctx = document.getElementById('expenseChart').getContext('2d');
     const categories = {};
     transactions.forEach(t => {
         if (t.amount < 0) {
@@ -269,36 +226,29 @@ function updateChart() {
 
     if (myChart) myChart.destroy();
     
-    // Red and Black Theme Colors for Chart
-    const redBlackGradients = [
-        'rgba(255, 0, 0, 0.9)',      // Bright Red
-        'rgba(204, 0, 0, 0.9)',      // Dark Red
-        'rgba(255, 51, 51, 0.9)',    // Light Red
-        'rgba(153, 0, 0, 0.9)',      // Deep Red
-        'rgba(255, 102, 102, 0.9)',  // Pink Red
-        'rgba(102, 0, 0, 0.9)'       // Maroon
-    ];
-    
-    const redBlackBorders = [
-        'rgba(255, 0, 0, 1)',
-        'rgba(204, 0, 0, 1)',
-        'rgba(255, 51, 51, 1)',
-        'rgba(153, 0, 0, 1)',
-        'rgba(255, 102, 102, 1)',
-        'rgba(102, 0, 0, 1)'
-    ];
-    
     myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: Object.keys(categories),
             datasets: [{
                 data: Object.values(categories),
-                backgroundColor: redBlackGradients,
-                borderColor: redBlackBorders,
-                borderWidth: 3,
-                hoverOffset: 15,
-                hoverBorderWidth: 4
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(250, 112, 154, 0.8)',
+                    'rgba(48, 207, 208, 0.8)',
+                    'rgba(168, 237, 234, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(102, 126, 234, 1)',
+                    'rgba(240, 147, 251, 1)',
+                    'rgba(79, 172, 254, 1)',
+                    'rgba(250, 112, 154, 1)',
+                    'rgba(48, 207, 208, 1)',
+                    'rgba(168, 237, 234, 1)'
+                ],
+                borderWidth: 3
             }]
         },
         options: { 
@@ -311,45 +261,28 @@ function updateChart() {
                         padding: 20,
                         font: {
                             size: 12,
-                            weight: '600',
-                            family: 'Inter'
+                            weight: '600'
                         },
-                        color: 'rgba(255, 255, 255, 0.9)',
-                        usePointStyle: true,
-                        pointStyle: 'circle'
+                        color: '#374151'
                     }
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.95)',
-                    padding: 15,
-                    cornerRadius: 12,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    cornerRadius: 8,
                     titleFont: {
-                        size: 15,
-                        weight: 'bold',
-                        family: 'Inter'
+                        size: 14,
+                        weight: 'bold'
                     },
                     bodyFont: {
-                        size: 14,
-                        family: 'Inter'
+                        size: 13
                     },
-                    borderColor: 'rgba(255, 0, 0, 0.5)',
-                    borderWidth: 2,
-                    displayColors: true,
                     callbacks: {
                         label: function(context) {
                             return context.label + ': ₹' + formatMoney(context.parsed);
-                        },
-                        labelTextColor: function(context) {
-                            return '#ffffff';
                         }
                     }
                 }
-            },
-            animation: {
-                animateRotate: true,
-                animateScale: true,
-                duration: 1500,
-                easing: 'easeInOutQuart'
             }
         }
     });
@@ -361,12 +294,7 @@ function updateUI() {
     updateChart();
 }
 
-// --- SAFE EVENT LISTENER ATTACHMENT ---
-// Checks if form exists before attaching to prevent errors
-const form = document.getElementById('form');
-if (form) {
-    form.addEventListener('submit', window.addTransaction);
-}
+document.getElementById('form').addEventListener('submit', addTransaction);
 
 // PDF Export (Attached to Window)
 window.downloadPDF = function() {
