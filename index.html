@@ -10,16 +10,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a0000 25%, #330000 50%, #1a0000 75%, #0f0f0f 100%);
             background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            animation: gradientShift 20s ease infinite;
             position: relative;
             overflow-x: hidden;
         }
@@ -30,7 +30,23 @@
             100% { background-position: 0% 50%; }
         }
         
-        /* Overlapping Background Text Effect */
+        /* Animated Gradient Text */
+        .gradient-text-animated {
+            background: linear-gradient(90deg, #ff0000, #cc0000, #ff3333, #ff6666, #ff0000);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease infinite;
+        }
+        
+        @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Overlapping Background Text Effect with Rotation */
         .bg-text-overlay {
             position: fixed;
             top: 0;
@@ -46,7 +62,7 @@
             position: absolute;
             font-size: 15vw;
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 0, 0, 0.05);
             white-space: nowrap;
             user-select: none;
         }
@@ -54,37 +70,39 @@
         .bg-text:nth-child(1) {
             top: 5%;
             left: -10%;
-            transform: rotate(-10deg);
-            animation: floatText1 20s ease-in-out infinite;
+            animation: rotateFloat1 25s ease-in-out infinite;
         }
         
         .bg-text:nth-child(2) {
             top: 30%;
             right: -10%;
-            transform: rotate(8deg);
-            animation: floatText2 25s ease-in-out infinite;
+            animation: rotateFloat2 30s ease-in-out infinite;
         }
         
         .bg-text:nth-child(3) {
             bottom: 10%;
             left: 5%;
-            transform: rotate(-5deg);
-            animation: floatText3 22s ease-in-out infinite;
+            animation: rotateFloat3 28s ease-in-out infinite;
         }
         
-        @keyframes floatText1 {
-            0%, 100% { transform: rotate(-10deg) translateY(0); }
-            50% { transform: rotate(-10deg) translateY(-30px); }
+        @keyframes rotateFloat1 {
+            0%, 100% { transform: rotate(-15deg) translateY(0); }
+            25% { transform: rotate(-5deg) translateY(-30px); }
+            50% { transform: rotate(-20deg) translateY(-50px); }
+            75% { transform: rotate(-10deg) translateY(-20px); }
         }
         
-        @keyframes floatText2 {
-            0%, 100% { transform: rotate(8deg) translateY(0); }
-            50% { transform: rotate(8deg) translateY(40px); }
+        @keyframes rotateFloat2 {
+            0%, 100% { transform: rotate(12deg) translateX(0) translateY(0); }
+            25% { transform: rotate(20deg) translateX(30px) translateY(40px); }
+            50% { transform: rotate(5deg) translateX(-20px) translateY(60px); }
+            75% { transform: rotate(15deg) translateX(10px) translateY(30px); }
         }
         
-        @keyframes floatText3 {
-            0%, 100% { transform: rotate(-5deg) translateX(0); }
-            50% { transform: rotate(-5deg) translateX(50px); }
+        @keyframes rotateFloat3 {
+            0%, 100% { transform: rotate(-8deg) translateX(0); }
+            33% { transform: rotate(3deg) translateX(50px); }
+            66% { transform: rotate(-12deg) translateX(-30px); }
         }
         
         .content-wrapper {
@@ -92,69 +110,168 @@
             z-index: 1;
         }
         
-        /* Glass morphism effect */
+        /* Glass morphism effect with red tint */
         .glass {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(26, 0, 0, 0.5);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(255, 0, 0, 0.2);
         }
         
         .glass-strong {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(15, 15, 15, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            box-shadow: 0 15px 45px rgba(255, 0, 0, 0.2);
         }
         
-        /* Modern gradient buttons */
+        /* Modern gradient buttons with glow effect */
         .btn-gradient-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-gradient-primary:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-gradient-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.6), 0 0 30px rgba(255, 0, 0, 0.5);
         }
         
         .btn-gradient-success {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ff3333 0%, #cc0000 100%);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient-success::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-gradient-success:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-gradient-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(240, 147, 251, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 51, 51, 0.6), 0 0 30px rgba(255, 51, 51, 0.5);
         }
         
         .btn-gradient-info {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #990000 0%, #660000 100%);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient-info::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-gradient-info:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-gradient-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(153, 0, 0, 0.6), 0 0 30px rgba(153, 0, 0, 0.5);
+        }
+        
+        /* Logout button glow */
+        .btn-logout {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            color: #ff3333;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-logout::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 0, 0, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-logout:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-logout:hover {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+            color: #ff0000;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4), 0 0 25px rgba(255, 0, 0, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
         }
         
         /* Colorful stat cards */
         .stat-card-1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a0000 0%, #330000 100%);
+            border: 1px solid rgba(255, 0, 0, 0.3);
             color: white;
         }
         
         .stat-card-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #003300 0%, #001a00 100%);
+            border: 1px solid rgba(0, 255, 0, 0.3);
             color: white;
         }
         
         .stat-card-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #330000 0%, #660000 100%);
+            border: 1px solid rgba(255, 51, 51, 0.3);
             color: white;
         }
         
-        /* Animated underline */
+        /* Animated underline with red gradient */
         .animated-underline {
             position: relative;
             display: inline-block;
@@ -167,44 +284,111 @@
             height: 4px;
             bottom: -8px;
             left: 0;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background: linear-gradient(90deg, #ff0000, #cc0000, #ff3333, #ff0000);
+            background-size: 200% 100%;
             border-radius: 2px;
+            animation: underlineShift 3s ease infinite;
         }
         
-        /* Input focus effects */
+        @keyframes underlineShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Input focus effects with red theme */
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea !important;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2) !important;
         }
         
         /* Table hover effects */
         tbody tr {
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.1);
         }
         
         tbody tr:hover {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05));
+            background: linear-gradient(90deg, rgba(255, 0, 0, 0.1), rgba(255, 51, 51, 0.08));
             transform: scale(1.01);
-        }
-        
-        /* Floating animation */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.15);
         }
         
         /* Category badge colors */
-        .badge-salary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-        .badge-food { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
-        .badge-rent { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
-        .badge-entertainment { background: linear-gradient(135deg, #fa709a, #fee140); color: white; }
-        .badge-utilities { background: linear-gradient(135deg, #30cfd0, #330867); color: white; }
-        .badge-other { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; }
+        .badge-salary { background: linear-gradient(135deg, #003300, #006600); color: white; }
+        .badge-food { background: linear-gradient(135deg, #ff3333, #cc0000); color: white; }
+        .badge-rent { background: linear-gradient(135deg, #660000, #330000); color: white; }
+        .badge-entertainment { background: linear-gradient(135deg, #ff6600, #cc3300); color: white; }
+        .badge-utilities { background: linear-gradient(135deg, #990000, #660000); color: white; }
+        .badge-other { background: linear-gradient(135deg, #4d0000, #1a0000); color: white; }
+        
+        /* Pulsing glow effect */
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), 0 0 40px rgba(255, 0, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 0, 0, 0.6), 0 0 60px rgba(255, 0, 0, 0.3);
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff0000, #cc0000);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ff3333, #ff0000);
+        }
+        
+        /* Text color for dark theme */
+        .text-light {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .text-light-secondary {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Label styling */
+        label {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        /* Input styling */
+        input, select {
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            border-color: rgba(255, 0, 0, 0.3) !important;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important;
+        }
+        
+        /* Table header styling */
+        thead th {
+            color: rgba(255, 255, 255, 0.9) !important;
+            border-bottom-color: rgba(255, 0, 0, 0.3) !important;
+        }
+        
+        tbody td {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -218,25 +402,25 @@
 
     <!-- Auth Container -->
     <div id="auth-container" class="flex-grow flex items-center justify-center content-wrapper p-6">
-        <div class="glass-strong p-10 rounded-3xl max-w-md w-full transform hover:scale-105 transition-all duration-300">
+        <div class="glass-strong p-10 rounded-3xl max-w-md w-full transform hover:scale-105 transition-all duration-300 pulse-glow">
             <div class="text-center mb-8">
-                <h2 id="auth-title" class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <h2 id="auth-title" class="text-4xl font-bold mb-2 gradient-text-animated">
                     Login
                 </h2>
-                <p class="text-gray-600">Welcome back to your financial hub</p>
+                <p class="text-light-secondary">Welcome back to your financial hub</p>
             </div>
             
             <form id="auth-form" class="space-y-6">
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                    <label class="block text-sm font-bold mb-2">Email Address</label>
                     <input type="email" id="auth-email" 
-                           class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                           class="shadow-lg appearance-none border-2 rounded-xl w-full py-3 px-4 leading-tight transition-all duration-200" 
                            placeholder="you@example.com" required>
                 </div>
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <label class="block text-sm font-bold mb-2">Password</label>
                     <input type="password" id="auth-password" 
-                           class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                           class="shadow-lg appearance-none border-2 rounded-xl w-full py-3 px-4 leading-tight transition-all duration-200" 
                            placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn-gradient-primary text-white font-bold py-3 px-6 rounded-xl w-full shadow-lg">
@@ -244,9 +428,9 @@
                 </button>
             </form>
 
-            <p class="mt-6 text-center text-sm text-gray-600">
+            <p class="mt-6 text-center text-sm text-light-secondary">
                 <span id="auth-toggle-text">Don't have an account?</span>
-                <button id="auth-toggle-btn" class="text-purple-600 font-bold hover:underline ml-1">Sign Up</button>
+                <button id="auth-toggle-btn" class="text-red-500 font-bold hover:underline ml-1">Sign Up</button>
             </p>
             <p id="auth-error" class="text-red-500 text-center text-sm mt-3 hidden font-semibold"></p>
         </div>
@@ -259,11 +443,11 @@
         <div class="glass-strong p-6 rounded-3xl mb-8 flex flex-col md:flex-row justify-between items-center shadow-xl">
             <div>
                 <h1 class="text-4xl font-bold mb-2">
-                    <span class="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent animated-underline">
+                    <span class="gradient-text-animated animated-underline">
                         Financial Dashboard
                     </span>
                 </h1>
-                <p class="text-gray-600">Track your expenses with style</p>
+                <p class="text-light-secondary">Track your expenses with style</p>
             </div>
             <div class="flex gap-3 mt-4 md:mt-0">
                 <button onclick="downloadPDF()" class="btn-gradient-info text-white font-bold py-3 px-6 rounded-xl shadow-lg flex items-center gap-2">
@@ -272,7 +456,7 @@
                     </svg>
                     Download PDF
                 </button>
-                <button id="logout-btn" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-3 px-6 rounded-xl shadow-lg border-2 border-gray-200 transition-all">
+                <button id="logout-btn" class="btn-logout font-bold py-3 px-6 rounded-xl shadow-lg transition-all">
                     Logout
                 </button>
             </div>
@@ -286,7 +470,7 @@
                         <h3 class="text-white text-sm uppercase font-semibold opacity-90 mb-2">Total Balance</h3>
                         <p id="balance" class="text-4xl font-bold text-white">₹0.00</p>
                     </div>
-                    <div class="bg-white bg-opacity-20 p-4 rounded-2xl">
+                    <div class="bg-white bg-opacity-10 p-4 rounded-2xl">
                         <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -299,7 +483,7 @@
                         <h3 class="text-white text-sm uppercase font-semibold opacity-90 mb-2">Income</h3>
                         <p id="money-plus" class="text-4xl font-bold text-white">+₹0.00</p>
                     </div>
-                    <div class="bg-white bg-opacity-20 p-4 rounded-2xl">
+                    <div class="bg-white bg-opacity-10 p-4 rounded-2xl">
                         <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                         </svg>
@@ -312,7 +496,7 @@
                         <h3 class="text-white text-sm uppercase font-semibold opacity-90 mb-2">Expenses</h3>
                         <p id="money-minus" class="text-4xl font-bold text-white">-₹0.00</p>
                     </div>
-                    <div class="bg-white bg-opacity-20 p-4 rounded-2xl">
+                    <div class="bg-white bg-opacity-10 p-4 rounded-2xl">
                         <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
                         </svg>
@@ -324,28 +508,28 @@
         <!-- Form and Chart Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div class="glass-strong p-8 rounded-3xl shadow-xl">
-                <h3 class="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <h3 class="text-2xl font-bold mb-6 gradient-text-animated">
                     Add New Transaction
                 </h3>
                 <form id="form" class="space-y-5">
                     <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                        <label class="block text-sm font-bold mb-2">Description</label>
                         <input type="text" id="text" 
-                               class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                               class="shadow-lg appearance-none border-2 rounded-xl w-full py-3 px-4 leading-tight transition-all duration-200" 
                                placeholder="e.g., Grocery shopping" required>
                     </div>
                     <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2">
+                        <label class="block text-sm font-bold mb-2">
                             Amount 
-                            <span class="text-xs font-normal text-gray-500 block mt-1">Negative for expense, Positive for income</span>
+                            <span class="text-xs font-normal text-light-secondary block mt-1">Negative for expense, Positive for income</span>
                         </label>
                         <input type="number" id="amount" 
-                               class="shadow-lg appearance-none border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200" 
+                               class="shadow-lg appearance-none border-2 rounded-xl w-full py-3 px-4 leading-tight transition-all duration-200" 
                                placeholder="e.g., -500 or +5000" required>
                     </div>
                     <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Category</label>
-                        <select id="category" class="shadow-lg border-2 border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight transition-all duration-200">
+                        <label class="block text-sm font-bold mb-2">Category</label>
+                        <select id="category" class="shadow-lg border-2 rounded-xl w-full py-3 px-4 leading-tight transition-all duration-200">
                             <option value="Salary">Salary</option>
                             <option value="Food">Food</option>
                             <option value="Rent">Rent</option>
@@ -360,7 +544,7 @@
                 </form>
             </div>
             <div class="glass-strong p-8 rounded-3xl shadow-xl flex flex-col">
-                <h3 class="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                <h3 class="text-2xl font-bold mb-6 gradient-text-animated">
                     Expense Breakdown
                 </h3>
                 <div class="flex-grow flex justify-center items-center" style="min-height: 300px;">
@@ -371,20 +555,20 @@
 
         <!-- Transactions Table -->
         <div class="glass-strong p-8 rounded-3xl shadow-xl">
-            <h3 class="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h3 class="text-2xl font-bold mb-6 gradient-text-animated">
                 Recent Transactions
             </h3>
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto">
                     <thead>
-                        <tr class="border-b-2 border-gray-200">
-                            <th class="px-6 py-4 text-left text-gray-700 font-bold">Description</th>
-                            <th class="px-6 py-4 text-left text-gray-700 font-bold">Category</th>
-                            <th class="px-6 py-4 text-right text-gray-700 font-bold">Amount</th>
-                            <th class="px-6 py-4 text-center text-gray-700 font-bold">Action</th>
+                        <tr class="border-b-2">
+                            <th class="px-6 py-4 text-left font-bold">Description</th>
+                            <th class="px-6 py-4 text-left font-bold">Category</th>
+                            <th class="px-6 py-4 text-right font-bold">Amount</th>
+                            <th class="px-6 py-4 text-center font-bold">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="list" class="text-gray-700"></tbody>
+                    <tbody id="list"></tbody>
                 </table>
             </div>
         </div>
